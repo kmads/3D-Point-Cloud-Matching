@@ -8,7 +8,7 @@ def readData(filename):
     dat = csv.reader(csvfile, delimiter=' ')
     pointCloud = []
     for i, row in enumerate(dat):
-        pointCloud.append([row[0], row[1], row[2]])
+        pointCloud.append([float(row[0]), float(row[1]), float(row[2])])
 
     print time.clock() - start
     return pointCloud
