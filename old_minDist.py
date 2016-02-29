@@ -1,4 +1,4 @@
-import time, math, random
+import time, math
 
 def minDist(pc1, pc2):
 	start = time.clock()
@@ -6,15 +6,12 @@ def minDist(pc1, pc2):
 	minArray = []
 	length = len(pc1)
 	print("Length " + str(length))
-	sampleArray = random.sample(range(0,length), 1000)
-	saLength = len(sampleArray)
 
-	for i in range(0,saLength):
-		ind = sampleArray[i];
-		currPoint = pc1[ind]
-		lat1 = pc1[ind][0]
-		lon1 = pc1[ind][1]
-		alt1 = pc1[ind][2]
+	for i in range(0,length):
+		currPoint = pc1[i]
+		lat1 = pc1[i][0]
+		lon1 = pc1[i][1]
+		alt1 = pc1[i][2]
 		min_pc2 = []
 		min_dist = 100
 		for j in range(0, length):
