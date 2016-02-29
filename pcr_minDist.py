@@ -7,6 +7,7 @@ def minDist(pc1, pc2):
 	length = len(pc1)
 	print("Length " + str(length))
 	sampleArray = random.sample(range(0,length), 1000)
+	sampleArray2 = random.sample(range(0,length), 1000)
 	saLength = len(sampleArray)
 
 	for i in range(0,saLength):
@@ -17,7 +18,8 @@ def minDist(pc1, pc2):
 		alt1 = pc1[ind][2]
 		min_pc2 = []
 		min_dist = 100
-		for j in range(0, length):
+		for k in range(0, saLength):
+			j = sampleArray2[k]
 			currRef = pc2[j]
 			lat2 = pc2[j][0]
 			lon2 = pc2[j][1]
