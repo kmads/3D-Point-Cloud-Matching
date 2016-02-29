@@ -74,8 +74,7 @@ def registration(P, X):
     print qt
 
     # final registration vector q = [qr|qt]t
-    q = [qr.transpose(), qt.transpose()]
-    return q
+    return qr.transpose(), qt.transpose()
 
 # q is a 4x1 array
 def R(q):
