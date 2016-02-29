@@ -6,18 +6,19 @@ def eachDki(R, qkT, yik, Pi0):
 	RPi0 = np.multiply(Pi0, R) #matrix multiply
 	temp = np.subtract(yik, RPi0)
 	n_i_sqrt = np.subtract(temp, qkT)
-	n_i = math.pow(n_i_sqrt, 2)
+	n_i = n_i_sqrt**2
 
 	return n_i
 
 def getDk(qkR, qkT, P, y):
+	start = time.clock()
 	sumN = 0
 	length = len(P)
-	R = createR(qkR)
+	R = createR(qkR.transpose())
 	for i in range(0, length):
 		yik = y[i]
 		Pi0 = P[i]
 		sumN += eachDki(R, qkT, yik, Pi0)
 	d_k = sumN / length
-
+	print time.clock() - start
 	return d_k

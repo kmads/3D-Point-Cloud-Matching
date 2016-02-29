@@ -1,13 +1,13 @@
 __author__ = 'Misha Kushnir'
 
 
-import numpy as np
+import numpy as np, time
 
 ## GENERATE QKR and QKT
 
 def registration(P, X):
     # (qk, dk) = Q(P0, Yk). Cost: O(Np)
-
+    start = time.clock()
     up = centerOfMass(P) # "center of mass" of measured point set P
     ux = centerOfMass(X) # center of mass for X point set
 
@@ -74,6 +74,7 @@ def registration(P, X):
     print qt
 
     # final registration vector q = [qr|qt]t
+    print time.clock() - start
     return qr.transpose(), qt.transpose()
 
 # q is a 4x1 array
