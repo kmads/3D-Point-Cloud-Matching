@@ -68,7 +68,7 @@ def registration(P, X):
     print qr
 
 
-    qt = ux - R(qr)*up # optimal translation vector
+    qt = ux.transpose() - np.dot(R(qr), up.transpose()) # optimal translation vector
 
     print "\nqt (optimal translation vector):"
     print qt
