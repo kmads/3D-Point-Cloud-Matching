@@ -28,7 +28,7 @@ def registration(P, X):
 
     # delta = [A23 A31 A12]T
 
-    delta = np.array([[A[1,2], A[2,0], A[0,1]] ]).transpose()
+    delta = np.array([[A[1,2], A[2,0], A[0,1]]]).transpose()
     print "\nDelta:"
     print delta
 
@@ -74,9 +74,8 @@ def registration(P, X):
     print qt
 
     # final registration vector q = [qr|qt]t
-    q = 0
-    dk = 0 # mean square point matching error
-    return (qr, qt)
+    q = [qr.transpose(), qt.transpose()]
+    return q
 
 # q is a 4x1 array
 def R(q):
@@ -104,25 +103,25 @@ def crossCovariance(P, X, up, ux):
 
     sum = np.zeros((3,3))
     for i in range(0, Np):
-        Pi = np.array([[P[i][0], P[i][1], P[i][2]]])
-        Xi = np.array([[X[i][0], X[i][1], X[i][2]]])
+        Pi = np.array(P[i])
+        Xi = np.array(X[i])
 
         x = Pi * Xi.transpose()
         sum += x
 
-    return sum / Np - up * ux.transpose()
+    return sum / float(Np) - up * ux.transpose()
 
 
 def centerOfMass(X):
 
     Nx = len(X)
 
-    sum = np.array([[0,0,0]])
+    sum = np.zeros(3)
     for i in range(0, len(X)):
         Xi = np.array([[X[i][0], X[i][1], X[i][2]]])
         sum = sum + Xi
 
-    return sum / Nx
+    return sum / float(Nx)
 
 
 
