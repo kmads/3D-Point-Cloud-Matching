@@ -10,7 +10,7 @@ def minDist(pc1, pc2):
 	saLength = len(sampleArray)
 
 	for i in range(0,saLength):
-		ind = sampleArray[i];
+		ind = sampleArray[i]
 		currPoint = pc1[ind]
 		lat1 = pc1[ind][0]
 		lon1 = pc1[ind][1]

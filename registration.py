@@ -1,6 +1,6 @@
 __author__ = 'Misha Kushnir'
 
-from Quaternion import Quat
+
 import numpy as np
 
 ## GENERATE QKR and QKT

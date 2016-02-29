@@ -10,11 +10,9 @@ def eachDki(R, qkT, yik, Pi0):
 
 	return n_i
 
-def getDk(qk, P, y):
+def getDk(qkR, qkT, P, y):
 	sumN = 0
 	length = len(P)
-	qkR = qk[:4]
-	qkT = qk[4:7]
 	R = createR(qkR)
 	for i in range(0, length):
 		yik = y[i]
