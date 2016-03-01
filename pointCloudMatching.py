@@ -50,5 +50,5 @@ if __name__ == '__main__':
 
     # concat qr and qt together into q
     print np.concatenate([qr, qt],1)
-    print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
+    #print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
     print time.clock() - start
