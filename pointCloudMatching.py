@@ -1,6 +1,6 @@
 __author__ = 'Holliday'
 import time, csv, copy
-from pcr_minDist import minDist
+from old_minDist import minDist
 from registration import registration, R as createR
 from getDK import getDk
 import numpy as np
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     # get the error of the first two iterations to use in the while loop condition
     yk = minDist(pk, cloud2)
     qr, qt = registration(cloud1, yk)
-    dk1 = getDk(qr, qt, pk, yk)
+    dk1 = getDk(qr, qt, cloud1, yk)
     pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
 
     yk = minDist(pk, cloud2)
     qr, qt = registration(cloud1, yk)
-    dk2 = getDk(qr, qt, pk, yk)
+    dk2 = getDk(qr, qt, cloud1, yk)
     pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
 
     print "DK: ", dk1, dk2
@@ -45,10 +45,10 @@ if __name__ == '__main__':
         dk1 = dk2
         yk = minDist(pk, cloud2)
         qr, qt = registration(cloud1, yk)
-        dk2 = getDk(qr, qt, pk, yk)
+        dk2 = getDk(qr, qt, cloud1, yk)
         pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
 
     # concat qr and qt together into q
     print np.concatenate([qr, qt],1)
-    print np.multiply(qt,cloud1)
+    print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
     print time.clock() - start
