@@ -4,14 +4,20 @@ from pcr_minDist import minDist
 from registration import registration, R as createR
 from getDK import getDk
 import numpy as np
+start = time.clock()
+
 
 def readData(filename):
-    start = time.clock()
     csvfile = open(filename, 'rb')
     dat = csv.reader(csvfile, delimiter=' ')
     pointCloud = []
+    # For now read in the first 1000 points of each point cloud
+    j = 0
     for i, row in enumerate(dat):
         pointCloud.append([float(row[0]), float(row[1]), float(row[2])])
+        j += 1
+        if j == 1000:
+            break
 
     print time.clock() - start
     return np.array(pointCloud)
@@ -33,6 +39,7 @@ if __name__ == '__main__':
     dk2 = getDk(qr, qt, pk, yk)
     pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
 
+    print "DK: ", dk1, dk2
 
     while dk1 - dk2 > threshold:
         dk1 = dk2
@@ -41,4 +48,7 @@ if __name__ == '__main__':
         dk2 = getDk(qr, qt, pk, yk)
         pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
 
-    print np.concatenate(qr, qt)
+    # concat qr and qt together into q
+    print np.concatenate([qr, qt],1)
+    print np.multiply(qt,cloud1)
+    print time.clock() - start
