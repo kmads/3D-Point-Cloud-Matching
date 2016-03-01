@@ -3,7 +3,7 @@ from registration import R as createR
 # call the getDk function to get value of dk with params qkR, qkT, P = point cloud 1 and y = closest points
 
 def eachDki(R, qkT, yik, Pi0):
-	RPi0 = np.multiply(Pi0, R) #matrix multiply
+	RPi0 = np.dot(Pi0, R) #matrix multiply
 	temp = np.subtract(yik, RPi0)
 	n_i_sqrt = np.subtract(temp, qkT)
 	n_i_mag = np.linalg.norm(n_i_sqrt) # Find the magnitude/Euclidean norm

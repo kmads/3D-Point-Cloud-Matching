@@ -1,4 +1,4 @@
-import time, math
+import time, math, numpy as np
 
 def minDist(pc1, pc2):
 	start = time.clock()
@@ -28,7 +28,7 @@ def minDist(pc1, pc2):
 	end = time.clock()
 	print("Finished in " + str(end-start) + "seconds")
 
-	return minArray
+	return np.array(minArray)
 
 def distLLE(lat1, lon1, alt1, lat2, lon2, alt2):
   earth_rad = 6378137

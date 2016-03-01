@@ -11,26 +11,14 @@ def registration(P, X):
     up = centerOfMass(P) # "center of mass" of measured point set P
     ux = centerOfMass(X) # center of mass for X point set
 
-    print "\nCenter of mass of P:"
-    print up
-    print "\nCenter of mass of X:"
-    print ux
-
     # cross-covariance matrix
     sigmapx = crossCovariance(P, X, up, ux)
-    print "\nCross covariance matrix:"
-    print sigmapx
 
     # Aij = (sigmapx - sigmaTpx)ij
     A = sigmapx - sigmapx.transpose()
-    print "\nAij:"
-    print A
 
     # delta = [A23 A31 A12]T
-
     delta = np.array([[A[1,2], A[2,0], A[0,1]]]).transpose()
-    print "\nDelta:"
-    print delta
 
     I3 = np.identity(3)
     # tr() = trace of a matrix = sum of elements along main diagonal
@@ -47,31 +35,16 @@ def registration(P, X):
     Qsigmapx[2,0] = delta[1]
     Qsigmapx[3,0] = delta[2]
 
-    Qsigmapx[1:4,1:4] = sigmapx + sigmapx.transpose() - trace*I3
-
-    print "\nQ(cross covariance matrix):"
-    print Qsigmapx
+    Qsigmapx[1:4,1:4] = sigmapx + sigmapx.transpose() - np.dot(trace,I3)
 
     # qr = eigenvector corresponding to the max eigenvalue of Qsigmapx is the optimal rotation
     # w = eigenvalues, v = eigenvectors (see numpy.linalg.eig documentation)
     (w, v) = np.linalg.eig(Qsigmapx)
 
-    print "\nEigenvalues:"
-    print w
     maxEigenvalue = max(w)
-    print "\nMax eigenvalue:"
-    print maxEigenvalue
     maxIndex = w.tolist().index(maxEigenvalue)
-    qr = np.array([v[maxIndex]]).transpose()
-
-    print "\nTransposed eigenvector for max eigenvalue (optimal rotation vector qr):"
-    print qr
-
-
-    qt = ux.transpose() - np.dot(R(qr), up.transpose()) # optimal translation vector
-
-    print "\nqt (optimal translation vector):"
-    print qt
+    qr = np.array(v[maxIndex]).transpose()
+    qt = np.subtract(ux.transpose(), np.dot(R(qr), up.transpose())) # optimal translation vector
 
     # final registration vector q = [qr|qt]t
     print time.clock() - start
@@ -92,9 +65,6 @@ def R(q):
     R[2,1] = 2*(q2*q3 + q0*q1)
     R[2,2] = q0*q0 + q3*q3 - q1*q1 -q2*q2
 
-    print "\nR:"
-    print R
-
     return R
 
 def crossCovariance(P, X, up, ux):
@@ -106,20 +76,20 @@ def crossCovariance(P, X, up, ux):
         Pi = np.array(P[i])
         Xi = np.array(X[i])
 
-        x = Pi * Xi.transpose()
-        sum += x
+        x = np.dot(Pi, Xi.transpose())
+        sum = np.add(sum, x)
 
-    return sum / float(Np) - up * ux.transpose()
+    return sum / float(Np) - np.dot(up, ux.transpose())
 
 
 def centerOfMass(X):
 
     Nx = len(X)
-
     sum = np.zeros(3)
+
     for i in range(0, len(X)):
-        Xi = np.array([[X[i][0], X[i][1], X[i][2]]])
-        sum = sum + Xi
+        # Xi = np.array(X[i])
+        sum = np.add(sum, X[i])
 
     return sum / float(Nx)
 

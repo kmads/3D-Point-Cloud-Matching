@@ -32,12 +32,15 @@ if __name__ == '__main__':
     yk = minDist(pk, cloud2)
     qr, qt = registration(cloud1, yk)
     dk1 = getDk(qr, qt, cloud1, yk)
-    pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
+    # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
+    pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
 
     yk = minDist(pk, cloud2)
+    print yk[0]
     qr, qt = registration(cloud1, yk)
     dk2 = getDk(qr, qt, cloud1, yk)
-    pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
+    # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
+    pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
 
     print "DK: ", dk1, dk2
 
@@ -46,9 +49,10 @@ if __name__ == '__main__':
         yk = minDist(pk, cloud2)
         qr, qt = registration(cloud1, yk)
         dk2 = getDk(qr, qt, cloud1, yk)
-        pk = np.add(np.dot(cloud1,createR(qr.transpose())), qt)
-
+        # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
+        pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
     # concat qr and qt together into q
+
     print np.concatenate([qr, qt],1)
     print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
     print time.clock() - start
