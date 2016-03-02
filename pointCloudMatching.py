@@ -4,8 +4,6 @@ from old_minDist import minDist
 from registration import registration, R as createR
 from getDK import getDk
 import numpy as np
-start = time.clock()
-
 
 def readData(filename):
     csvfile = open(filename, 'rb')
@@ -18,11 +16,10 @@ def readData(filename):
         j += 1
         if j == 1000:
             break
-
-    print time.clock() - start
     return np.array(pointCloud)
 
 if __name__ == '__main__':
+    start = time.clock()
     threshold = 100
     cloud1 = readData("pointcloud1.fuse")
     cloud2 = readData("pointcloud2.fuse")
@@ -32,15 +29,13 @@ if __name__ == '__main__':
     yk = minDist(pk, cloud2)
     qr, qt = registration(cloud1, yk)
     dk1 = getDk(qr, qt, cloud1, yk)
-    # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
-    pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
+    pk = np.dot(cloud1, createR(qr.transpose())) + qt
 
     yk = minDist(pk, cloud2)
     print yk[0]
     qr, qt = registration(cloud1, yk)
     dk2 = getDk(qr, qt, cloud1, yk)
-    # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
-    pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
+    pk = np.dot(cloud1, createR(qr.transpose())) + qt
 
     print "DK: ", dk1, dk2
 
@@ -50,9 +45,9 @@ if __name__ == '__main__':
         qr, qt = registration(cloud1, yk)
         dk2 = getDk(qr, qt, cloud1, yk)
         # pk = np.subtract(np.dot(cloud1,createR(qr.transpose())), qt)
-        pk = np.dot(np.subtract(cloud1, qt), createR(qr.transpose()))
+        pk = np.add(np.dot(cloud1, createR(qr.transpose())), qt)
     # concat qr and qt together into q
 
     print np.concatenate([qr, qt],1)
-    #print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
+    print np.testing.assert_allclose(pk, cloud2, rtol=.0001, atol=0)
     print time.clock() - start

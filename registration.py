@@ -6,7 +6,6 @@ import numpy as np, time
 ## GENERATE QKR and QKT
 
 def registration(P, X):
-    # (qk, dk) = Q(P0, Yk). Cost: O(Np)
     start = time.clock()
     up = centerOfMass(P) # "center of mass" of measured point set P
     ux = centerOfMass(X) # center of mass for X point set
@@ -15,10 +14,14 @@ def registration(P, X):
     sigmapx = crossCovariance(P, X, up, ux)
 
     # Aij = (sigmapx - sigmaTpx)ij
-    A = sigmapx - sigmapx.transpose()
-
+    A = np.array(sigmapx - sigmapx.transpose())
+    print sigmapx
     # delta = [A23 A31 A12]T
-    delta = np.array([[A[1,2], A[2,0], A[0,1]]]).transpose()
+    delta = np.zeros(3)
+    delta[0] = A[1,2]
+    delta[1] = A[2,0]
+    delta[2] = A[0,1]
+    delta = delta.transpose()
 
     I3 = np.identity(3)
     # tr() = trace of a matrix = sum of elements along main diagonal
@@ -35,16 +38,16 @@ def registration(P, X):
     Qsigmapx[2,0] = delta[1]
     Qsigmapx[3,0] = delta[2]
 
-    Qsigmapx[1:4,1:4] = sigmapx + sigmapx.transpose() - np.dot(trace,I3)
+    Qsigmapx[1:4,1:4] = sigmapx + sigmapx.transpose() - trace*I3
 
     # qr = eigenvector corresponding to the max eigenvalue of Qsigmapx is the optimal rotation
     # w = eigenvalues, v = eigenvectors (see numpy.linalg.eig documentation)
-    (w, v) = np.linalg.eig(Qsigmapx)
+    w, v = np.linalg.eig(Qsigmapx)
 
     maxEigenvalue = max(w)
     maxIndex = w.tolist().index(maxEigenvalue)
-    qr = np.array(v[maxIndex]).transpose()
-    qt = np.subtract(ux.transpose(), np.dot(R(qr), up.transpose())) # optimal translation vector
+    qr = v[maxIndex].transpose()
+    qt = ux.transpose() - np.dot(R(qr), up.transpose()) # optimal translation vector
 
     # final registration vector q = [qr|qt]t
     print time.clock() - start
@@ -73,13 +76,11 @@ def crossCovariance(P, X, up, ux):
 
     sum = np.zeros((3,3))
     for i in range(0, Np):
-        Pi = np.array(P[i])
-        Xi = np.array(X[i])
+        x = np.mat(P[i] - up).transpose() * np.mat(X[i]- ux)
+        print x.shape()
+        sum = sum + x
 
-        x = np.dot(Pi, Xi.transpose())
-        sum = np.add(sum, x)
-
-    return sum / float(Np) - np.dot(up, ux.transpose())
+    return np.array(sum / float(Np))
 
 
 def centerOfMass(X):
@@ -89,14 +90,14 @@ def centerOfMass(X):
 
     for i in range(0, len(X)):
         # Xi = np.array(X[i])
-        sum = np.add(sum, X[i])
+        sum = sum + X[i]
 
-    return sum / float(Nx)
+    return np.array(sum / float(Nx))
 
 
 
-if __name__=="__main__":
-    P = [[0.0, 0.4, 1.0], [1.3, 6.4, 2.3]]
-    X = [[3.2, 1.3, 0.4], [2.2, 2.2, 1.9]]
-
-    reg = registration(P, X)
+# if __name__=="__main__":
+#     P = [[0.0, 0.4, 1.0], [1.3, 6.4, 2.3]]
+#     X = [[3.2, 1.3, 0.4], [2.2, 2.2, 1.9]]
+#
+#     reg = registration(P, X)

@@ -8,21 +8,13 @@ def minDist(pc1, pc2):
 	print("Length " + str(length))
 
 	for i in range(0,length):
-		currPoint = pc1[i]
-		lat1 = pc1[i][0]
-		lon1 = pc1[i][1]
-		alt1 = pc1[i][2]
 		min_pc2 = []
 		min_dist = 100
 		for j in range(0, length):
-			currRef = pc2[j]
-			lat2 = pc2[j][0]
-			lon2 = pc2[j][1]
-			alt2 = pc2[j][2]
-			dist = distLLE(lat1, lon2, alt1, lat1, lon2, alt2)
+			dist = np.linalg.norm(np.subtract(pc2[j], pc1[i]))
 			if dist < min_dist:
 				min_dist = dist
-				min_pc2 = currRef
+				min_pc2 = pc2[j]
 		minArray.append(min_pc2)
 
 	end = time.clock()

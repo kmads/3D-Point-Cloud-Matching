@@ -4,9 +4,7 @@ from registration import R as createR
 
 def eachDki(R, qkT, yik, Pi0):
 	RPi0 = np.dot(Pi0, R) #matrix multiply
-	temp = np.subtract(yik, RPi0)
-	n_i_sqrt = np.subtract(temp, qkT)
-	n_i_mag = np.linalg.norm(n_i_sqrt) # Find the magnitude/Euclidean norm
+	n_i_mag = np.linalg.norm(yik - RPi0 - qkT) # Find the magnitude/Euclidean norm
 	n_i = n_i_mag**2
 	return n_i
 
@@ -19,6 +17,6 @@ def getDk(qkR, qkT, P, y):
 		yik = y[i]
 		Pi0 = P[i]
 		sumN += eachDki(R, qkT, yik, Pi0)
-	d_k = sumN / length
+	d_k = sumN / float(length)
 	print time.clock() - start
 	return d_k
