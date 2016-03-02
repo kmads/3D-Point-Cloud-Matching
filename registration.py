@@ -15,7 +15,7 @@ def registration(P, X):
 
     # Aij = (sigmapx - sigmaTpx)ij
     A = np.array(sigmapx - sigmapx.transpose())
-    print sigmapx
+    print "Sigma:", sigmapx
     # delta = [A23 A31 A12]T
     delta = np.zeros(3)
     delta[0] = A[1,2]
@@ -47,8 +47,9 @@ def registration(P, X):
     maxEigenvalue = max(w)
     maxIndex = w.tolist().index(maxEigenvalue)
     qr = v[maxIndex].transpose()
-    qt = ux.transpose() - np.dot(R(qr), up.transpose()) # optimal translation vector
-
+    print np.mat(up)* np.mat(R(qr))
+    qt = ux - np.dot(up, R(qr)) # optimal translation vector
+    print ux, up, qt
     # final registration vector q = [qr|qt]t
     print time.clock() - start
     return qr.transpose(), qt.transpose()
@@ -77,7 +78,6 @@ def crossCovariance(P, X, up, ux):
     sum = np.zeros((3,3))
     for i in range(0, Np):
         x = np.mat(P[i] - up).transpose() * np.mat(X[i]- ux)
-        print x.shape()
         sum = sum + x
 
     return np.array(sum / float(Np))
